@@ -3,9 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var Quiz = require('./routes/quiz');
+var Question = require('./routes/question');
 
 var app = express();
 
@@ -19,9 +25,73 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+mongoose.connect('mongodb://localhost/quiz',{useNewUrlParser:true,useUnifiedTopology:true})
+.then(()=>console.log("database connected"));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+
+app.get('/',function(req,res){
+  res.send('hellow')
+});
+
+
+
+//get quiz method
+app.get('/api/quiz',function(req,res){
+  //console.log("requested")
+  Quiz.getQuiz(function(err,quiz){
+    if(err){
+      throw err;
+    }
+    console.log(quiz)
+    res.json(quiz);
+  });
+
+});
+
+//post quiz method
+app.post('/api/quiz',function(req,res){
+  console.log("requested")
+  //console.log(req);
+  var quiz =req.body;
+  Quiz.addQuiz(quiz,function(err,quiz){
+    if(err){
+      throw err;
+    }
+    res.json(quiz);
+  });
+ 
+
+});
+
+//get question method
+app.get('/api/question',function(req,res){
+  //console.log("requested")
+  Question.getQuestion(function(err,question){
+    if(err){
+      throw err;
+    }
+    console.log(question)
+    res.json(question);
+  });
+
+});
+
+//post question method
+app.post('/api/question',function(req,res){
+  console.log('requested');
+  var q = req.body;
+  console.log("received body",q);
+  Question.addQuestion(q,function(err,question){
+    if(err){
+      throw err;
+    }
+    console.log(question);
+    res.json(question);
+  });
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -39,3 +109,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+app.listen(8081);
+console.log('Running on port 8081...');
