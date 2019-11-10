@@ -60,6 +60,7 @@ app.post('/api/quiz',function(req,res){
     if(err){
       throw err;
     }
+    console.log(quiz);
     res.json(quiz);
   });
  
@@ -92,6 +93,20 @@ app.post('/api/question',function(req,res){
     res.json(question);
   });
 });
+
+
+app.get('/api/quiz_question/:quiz_id',function(req,res){
+  //console.log(req)
+  Question.getQuizQuestionsById(req.params.quiz_id,function(err,quiz){
+    if(err){
+      throw err;
+    }
+    //console.log(quiz)
+    res.json(quiz);
+  });
+
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

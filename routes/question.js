@@ -34,3 +34,7 @@ module.exports.getQuestion = function(callback,limit){
 module.exports.addQuestion = function(question,callback){
     Question.create(question,callback);
 }
+//to get all questions
+module.exports.getQuizQuestionsById = function(id,callback){
+    Question.find({"Quiz":id},callback);
+}

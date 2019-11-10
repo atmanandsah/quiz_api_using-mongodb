@@ -11,7 +11,7 @@ var quizSchema = mongoose.Schema({
     }
 });
 
-var Quiz = module.exports = mongoose.model('Quiz',quizSchema,"Quiz");
+var Quiz = module.exports = mongoose.model('Quiz',quizSchema,"quizs");
 //get quiz
 module.exports.getQuiz = function(callback,limit){
     Quiz.find(callback);
